@@ -9,6 +9,8 @@ import { connect } from "react-redux";
 import { getActions } from "../store/actions/authActions";
 import { connectWithSocketServer } from "../realtimeCommunication/socketConnection";
 import { useNavigate } from "react-router-dom";
+import Room from './Room/Room'
+
 
 const Wrapper = styled("div")({
   width: "100%",
@@ -16,7 +18,7 @@ const Wrapper = styled("div")({
   display: "flex",
 });
 
-const Dashboard = ({ setUserDetails }) => {
+const Dashboard = ({ setUserDetails ,isUserInRoom}) => {
   const navigate= useNavigate(); 
   useEffect(() => {
     const userDetails = localStorage.getItem("user");
@@ -34,6 +36,7 @@ const Dashboard = ({ setUserDetails }) => {
       <FriendsSideBar />
       <Messenger />
       <AppBar />
+      {isUserInRoom && <Room/>}
     </Wrapper>
   );
 };
@@ -43,4 +46,9 @@ const mapActionsToProps = (dispatch) => {
     ...getActions(dispatch),
   };
 };
-export default connect(null, mapActionsToProps)(Dashboard);
+const  mapStoretoProps=({room})=>{
+  return {
+    ...room,
+  }
+}
+export default connect(mapStoretoProps, mapActionsToProps)(Dashboard);
